@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <style type="text/css">
+    canvas {
+      border: 2px solid black;
+    }
+    </style>
+  </head>
+  <body>
+    <canvas id="layer" width="150" height="150"></canvas>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var canvas = document.getElementById("layer");
+        var ctx = canvas.getContext('2d', { alpha: false });
+
+        socket.on("pixel", function(msg) {
+          const view = new Uint8Array(msg);
+          drawI(view[0], view[1]);
+        })
+
+        socket.on("pixels", function(msg){
+          const view = new Uint8Array(msg);
+          for (let i = 0; i < 15 * 15; i++) {
+            drawI(i, view[i]);
+          }
+        });
+
+        socket.on("info", function(msg){
+          console.log(msg);
+        });
+       
+        function drawI(i, color) {
+          const x = Math.floor(i / 15);
+          const y = i % 15;
+          draw(x, y, color);
+        }
+        function draw(x, y, color) {
+          ctx.fillStyle = `rgb(${color},${color},${color})`;
+          ctx.fillRect(x * 10, y * 10, 10, 10);
+        }
+    </script>
+  </body>
+</html>
