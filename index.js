@@ -16,10 +16,10 @@ async function main() {
     await p(cb => device.controlTransfer(bmRequestType.write, bmRequest.clear_feature, 0x0000, 0x0d, Buffer.from([0x01]), cb))
 
     while (true) {
-        await readInfo(device);
-        await p(cb => setTimeout(cb, 33));
+        // await readInfo(device);
+        // await p(cb => setTimeout(cb, 33));
         // Pixels!
-        // await readFrameBuffer(device);
+        await readFrameBuffer(device, true, 3);
     }
 }
 
